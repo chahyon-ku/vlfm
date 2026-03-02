@@ -2,7 +2,7 @@
 
 import os
 from dataclasses import dataclass, fields
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import cv2
 import numpy as np
@@ -15,11 +15,12 @@ from vlfm.mapping.obstacle_map import ObstacleMap
 from vlfm.obs_transformers.utils import image_resize
 from vlfm.policy.utils.pointnav_policy import WrappedPointNavResNetPolicy
 from vlfm.utils.geometry_utils import get_fov, rho_theta
-from vlfm.vlm.blip2 import BLIP2Client
+from vlfm.vlm.blip2 import BLIP2Client, BLIP2
 from vlfm.vlm.coco_classes import COCO_CLASSES
-from vlfm.vlm.grounding_dino import GroundingDINOClient, ObjectDetections
-from vlfm.vlm.sam import MobileSAMClient
-from vlfm.vlm.yolov7 import YOLOv7Client
+from vlfm.vlm.grounding_dino import GroundingDINOClient, ObjectDetections, GroundingDINO
+from vlfm.vlm.sam import MobileSAMClient, MobileSAM
+from vlfm.vlm.yolov7 import YOLOv7Client, YOLOv7
+
 
 try:
     from habitat_baselines.common.tensor_dict import TensorDict
@@ -46,6 +47,12 @@ class BaseObjectNavPolicy(BasePolicy):
         depth_image_shape: Tuple[int, int],
         pointnav_stop_radius: float,
         object_map_erosion_size: float,
+        #
+        grounding_dino_config_path: str,
+        grounding_dino_checkpoint_path: str,
+        yolov7_checkpoint_path: str,
+        mobile_sam_checkpoint_path: str,
+        #
         visualize: bool = True,
         compute_frontiers: bool = True,
         min_obstacle_height: float = 0.15,
@@ -61,12 +68,26 @@ class BaseObjectNavPolicy(BasePolicy):
         **kwargs: Any,
     ) -> None:
         super().__init__()
-        self._object_detector = GroundingDINOClient(port=int(os.environ.get("GROUNDING_DINO_PORT", "12181")))
-        self._coco_object_detector = YOLOv7Client(port=int(os.environ.get("YOLOV7_PORT", "12184")))
-        self._mobile_sam = MobileSAMClient(port=int(os.environ.get("SAM_PORT", "12183")))
+        # self._object_detector = GroundingDINOClient(port=int(os.environ.get("GROUNDING_DINO_PORT", "12181")))
+        # self._coco_object_detector = YOLOv7Client(port=int(os.environ.get("YOLOV7_PORT", "12184")))
+        # self._mobile_sam = MobileSAMClient(port=int(os.environ.get("SAM_PORT", "12183")))
+        # self._use_vqa = use_vqa
+        # if use_vqa:
+        #     self._vqa = BLIP2Client(port=int(os.environ.get("BLIP2_PORT", "12185")))
+        self._object_detector = GroundingDINO(
+            config_path=grounding_dino_config_path,
+            weights_path=grounding_dino_checkpoint_path
+        )
+        self._coco_object_detector = YOLOv7(
+            weights=yolov7_checkpoint_path,
+        )
+        self._mobile_sam = MobileSAM(
+            sam_checkpoint=mobile_sam_checkpoint_path
+        )
         self._use_vqa = use_vqa
         if use_vqa:
-            self._vqa = BLIP2Client(port=int(os.environ.get("BLIP2_PORT", "12185")))
+            self._vqa = BLIP2()
+        #
         self._pointnav_policy = WrappedPointNavResNetPolicy(pointnav_policy_path)
         self._object_map: ObjectPointCloudMap = ObjectPointCloudMap(erosion_size=object_map_erosion_size)
         self._depth_image_shape = tuple(depth_image_shape)
@@ -378,6 +399,12 @@ class VLFMConfig:
     pointnav_policy_path: str = "data/pointnav_weights.pth"
     depth_image_shape: Tuple[int, int] = (224, 224)
     pointnav_stop_radius: float = 0.9
+    #
+    grounding_dino_config_path: Optional[str] = None
+    grounding_dino_checkpoint_path: Optional[str] = None
+    yolov7_checkpoint_path: Optional[str] = None
+    mobile_sam_checkpoint_path: Optional[str] = None
+    #
     use_max_confidence: bool = False
     object_map_erosion_size: int = 5
     exploration_thresh: float = 0.0

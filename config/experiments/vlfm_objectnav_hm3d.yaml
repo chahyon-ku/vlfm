@@ -17,6 +17,10 @@ defaults:
   - /habitat_baselines/rl/policy: vlfm_policy
   - _self_
 
+hydra:
+  run:
+    dir: outputs/01_eval
+
 habitat:
   environment:
     iterator_options:
@@ -30,7 +34,7 @@ habitat:
 
 habitat_baselines:
   evaluate: True
-  eval_ckpt_path_dir: data/dummy_policy.pth
+  eval_ckpt_path_dir: data/checkpoints/dummy_policy.pth
   num_environments: 1
   load_resume_state_config: False
 
@@ -54,6 +58,12 @@ habitat_baselines:
 
     policy:
       name: "HabitatITMPolicyV2"
+      # NOTE(ku) new checkpoint path
+      pointnav_policy_path: data/checkpoints/pointnav_weights.pth
+      grounding_dino_config_path: third_party/grounding-dino/groundingdino/config/GroundingDINO_SwinT_OGC.py
+      grounding_dino_checkpoint_path: data/checkpoints/groundingdino_swint_ogc.pth
+      yolov7_checkpoint_path: data/checkpoints/yolov7-e6e.pt
+      mobile_sam_checkpoint_path: /home/chahyon/vlfm/data/checkpoints/mobile_sam/mobile_sam.pt
 
     ppo:
       # ppo params

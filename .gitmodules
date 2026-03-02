@@ -1,0 +1,18 @@
+[submodule "third_party/lavis"]
+	path = third_party/lavis
+	url = https://github.com/chahyon-ku/lavis.git
+[submodule "third_party/yolov7"]
+	path = third_party/yolov7
+	url = https://github.com/chahyon-ku/yolov7.git
+[submodule "third_party/habitat-sim"]
+	path = third_party/habitat-sim
+	url = https://github.com/chahyon-ku/habitat-sim
+[submodule "third_party/habitat-lab"]
+	path = third_party/habitat-lab
+	url = https://github.com/chahyon-ku/habitat-lab
+[submodule "third_party/mobile-sam"]
+	path = third_party/mobile-sam
+	url = https://github.com/chahyon-ku/mobile-sam
+[submodule "third_party/grounding-dino"]
+	path = third_party/grounding-dino
+	url = https://github.com/chahyon-ku/grounding-dino
