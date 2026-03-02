@@ -12,16 +12,15 @@ from vlfm.vlm.detections import ObjectDetections
 
 from .server_wrapper import ServerMixin, host_model, send_request, str_to_image
 
-sys.path.insert(0, "yolov7/")
 try:
-    from models.experimental import attempt_load  # noqa: E402
-    from utils.datasets import letterbox  # noqa: E402
-    from utils.general import (  # noqa: E402
+    from yolov7.models.experimental import attempt_load  # noqa: E402
+    from yolov7.utils.datasets import letterbox  # noqa: E402
+    from yolov7.utils.general import (  # noqa: E402
         check_img_size,
         non_max_suppression,
         scale_coords,
     )
-    from utils.torch_utils import TracedModel  # noqa: E402
+    from yolov7.utils.torch_utils import TracedModel  # noqa: E402
 except Exception:
     print("Could not import yolov7. This is OK if you are only using the client.")
 sys.path.pop(0)
@@ -105,7 +104,13 @@ class YOLOv7:
         logits = pred[:, 4]
         phrases = [COCO_CLASSES[int(i)] for i in pred[:, 5]]
 
-        detections = ObjectDetections(boxes, logits, phrases, image_source=image, fmt="xyxy")
+        detections = ObjectDetections(
+            boxes.cpu(),
+            logits.cpu(),
+            phrases, 
+            image_source=image,
+            fmt="xyxy"
+        )
 
         return detections
 

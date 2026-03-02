@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 import numpy as np
 
-from vlfm.vlm.blip2itm import BLIP2ITMClient
+from vlfm.vlm.blip2itm import BLIP2ITMClient, BLIP2ITM
 
 
 class Frontier:
@@ -16,8 +16,9 @@ class Frontier:
 class FrontierMap:
     frontiers: List[Frontier] = []
 
-    def __init__(self, encoding_type: str = "cosine"):
-        self.encoder: BLIP2ITMClient = BLIP2ITMClient()
+    def __init__(self, encoder: BLIP2ITM, encoding_type: str = "cosine"):
+        # self.encoder: BLIP2ITMClient = BLIP2ITMClient()
+        self.encoder: BLIP2ITM = encoder
 
     def reset(self) -> None:
         self.frontiers = []

@@ -186,3 +186,11 @@ habitat-lab/
 GroundingDINO/
 __pycache__/
 *.pyc
+
+/data
+/third_party
+/outputs
+/tb
+/traced_model.pt
+
+*.egg-info

@@ -149,7 +149,7 @@ class ObjectPointCloudMap:
         fx: float,
         fy: float,
     ) -> np.ndarray:
-        final_mask = object_mask * 255
+        final_mask = (object_mask * 255).astype(np.uint8)
         final_mask = cv2.erode(final_mask, None, iterations=self._erosion_size)  # type: ignore
 
         valid_depth = depth.copy()
@@ -279,7 +279,7 @@ def too_offset(mask: np.ndarray) -> bool:
         bool: True if the object is too offset, False otherwise.
     """
     # Find the bounding rectangle of the mask
-    x, y, w, h = cv2.boundingRect(mask)
+    x, y, w, h = cv2.boundingRect(mask.astype(np.uint8))
 
     # Calculate the thirds of the mask
     third = mask.shape[1] // 3
