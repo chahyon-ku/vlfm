@@ -1,0 +1,19 @@
+[project]
+name = "vlfm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+]
+
+[build-system]
+requires = ["setuptools<82"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["vlfm"]  # package names should match these glob patterns (["*"] by default)
+
+[tool.uv]
+no-build-isolation = true
+config-settings = { editable_mode = "compat" }

@@ -1,21 +1,32 @@
+# vlfm
 
-``` bash
+## environment setup
+```bash
 git submodule update --init --recursive
-mamba create -y -f env.yaml
-mamba activate vlfm
-
-# habitat sim
+# mamba (for compiling habitat and grounding dino)
+mamba create -f env-cu128.yaml
+mamba activate cu128
+# uv
+uv venv --python 3.11
+uv pip install -r torch.txt
+uv pip install --no-build-isolation -r requirements.txt
+. .venv/bin/activate
+# habitat
 cd third_party/habitat-sim
 rm -rf build
 python setup.py install --with-bullet --headless
 cd -
-echo "export MAGNUM_LOG=quiet HABITAT_SIM_LOG=quiet" > $CONDA_PREFIX/etc/conda/activate.d/quiet_habitat.sh
-echo "unset MAGNUM_LOG HABITAT_SIM_LOG" > $CONDA_PREFIX/etc/conda/deactivate.d/quiet_habitat.sh
 
-# download
+# run after downloading data
+python scripts/01_eval.py  # habitat broken
+```
+
+## download data
+```bash
 ## hm3d
 python -m habitat_sim.utils.datasets_download \
-  --username $MATTERPORT_TOKEN_ID --password $MATTERPORT_TOKEN_SECRET \
+  --username $MATTERPORT_TOKEN_ID \
+  --password $MATTERPORT_TOKEN_SECRET \
   --uids hm3d_val_v0.2 \
   --data-path data
 ## objectnav - hm3d
@@ -36,8 +47,4 @@ gdown https://drive.google.com/uc?id=1dE-YAG-1mFCBmao2rHDp0n-PP4eH7SjE -O mobile
 unzip mobile_sam.zip
 mv weight data/checkpoints/mobile_sam
 rm mobile_sam.zip
-
-# eval
-python scripts/01_eval.py
-python scripts/01_eval.py habitat.dataset.data_path=data/datasets/objectnav/mp3d/val/val.json.gz
 ```

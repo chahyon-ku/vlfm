@@ -1,0 +1,21 @@
+name: cu128
+
+channels:
+  - nvidia
+  - conda-forge
+
+dependencies:
+  # cuda
+  - cuda=12.8
+  # c/c++
+  - gcc=11
+  - gxx=11
+  - gxx_linux-64=11
+  - ninja
+  - cmake==3.26
+  # habitat-sim
+  - libopengl-devel
+  - libglx-devel
+  - libegl-devel
+  # grounding-dino
+  - libcryptx

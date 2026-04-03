@@ -1,0 +1,30 @@
+pip
+setuptools>71,<81
+
+# habitat
+-e third_party/habitat-lab/habitat-lab
+-e third_party/habitat-lab/habitat-baselines
+
+# mobile_sam
+mobile-sam @ git+https://github.com/chahyon-ku/mobile-sam
+# grounding_dino
+groundingdino @ git+https://github.com/chahyon-ku/grounding-dino
+# yolov7
+yolov7 @ git+https://github.com/chahyon-ku/yolov7
+seaborn
+# lavis
+salesforce-lavis @ git+https://github.com/chahyon-ku/lavis
+blis<=1.2.0  # speed up by using pre-built wheels
+huggingface_hub<0.26
+transformers==4.33.0
+
+# vlfm
+hydra-core
+flask
+open3d
+protobuf==6.31.*
+numpy==1.*
+gdown
+frontier_exploration @ git+https://github.com/naokiyokoyama/frontier_exploration.git
+depth_camera_filtering @ git+https://github.com/naokiyokoyama/depth_camera_filtering
+-e .
